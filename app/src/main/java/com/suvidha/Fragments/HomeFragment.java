@@ -75,6 +75,10 @@ import static com.suvidha.Utilities.Utils.shopTypesMap;
 
 public class HomeFragment extends Fragment implements View.OnClickListener, MainActivity.NotifyFragment {
     private static final int PERMISSION_ID = 001;
+    public Dialog dialog;
+    public ProgressBar progressBar;
+    ApiInterface apiInterface;
+    Dialog d;
     private Button iconGroceries;
     private Button iconRequestPass;
     private Button iconMilk;
@@ -88,10 +92,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Main
     private TextInputEditText name, phone, address, st, end, authority, type;
     private CheckBox tnc;
     private Button cancel, register;
-    ApiInterface apiInterface;
     private Location quarantineLocation;
-    public Dialog dialog;
-    public ProgressBar progressBar;
     private Spinner spinner_zone, spinner_state, spinner_district;
     private String mSelectedState, mSelectedDistrict;
     private List<String> mDistricts;
@@ -228,9 +229,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Main
                             Log.e("LOL", "OMG");
 //                            LOCATION_LAT = quarantineLocation.getLatitude();
 //                            LOCATION_LON = quarantineLocation.getLongitude();
-                            if(is_quarantined == 0) {
+                            if (is_quarantined == 0) {
                                 createQuarentineDialog();
-                            }else{
+                            } else {
                                 Intent intent;
                                 intent = new Intent(getContext(), QuarantineActivity.class);
                                 intent.putExtra("lat", (float) currentLocation.getLatitude());
@@ -268,7 +269,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Main
         dialog.show();
 
     }
-    Dialog d;
+
     private void setDialog(Dialog dialog) {
         name = dialog.findViewById(R.id.quarantine_register_name);
         name.setText(SharedPrefManager.getInstance(getContext()).getString(SharedPrefManager.Key.USER_NAME));
@@ -392,7 +393,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Main
             public void onClick(View v) {
                 String etname = name.getText().toString().trim();
                 String etphone = phone.getText().toString().trim();
-                
+
                 String etaddress = address.getText().toString().trim();
                 String stDate = st.getText().toString().trim();
                 String endDate = end.getText().toString().trim();
@@ -447,7 +448,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Main
                                 }
 
                             } else {
-                                Log.e("heey", call.toString() + " -- " + response.errorBody().toString());
+                                if (call != null && response != null) {
+                                    Log.e("home", call.toString() + " -- " + response.errorBody().toString());
+                                }
                                 Toast.makeText(getContext(), getResources().getString(R.string.failed_to_register_quarantine), Toast.LENGTH_SHORT).show();
                             }
                         }
